@@ -1,15 +1,7 @@
-import { Injectable } from '@angular/core';
-
-import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { UserModule } from '../user.module';
-
-export interface User {
-  id: number;
-  name: string;
-  username: string;
-  email: string;
-}
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { User } from '../models/user.model';
 
 @Injectable()
 export class UserService {
