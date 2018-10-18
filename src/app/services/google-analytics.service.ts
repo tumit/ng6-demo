@@ -1,15 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter, map, tap } from 'rxjs/operators';
-
-declare let ga: Function;
-
+import { WindowReference } from './window.reference';
 @Injectable({
   providedIn: 'root'
 })
 export class GoogleAnalyticsService {
 
-  constructor(private router: Router) {
+  constructor(
+    private winRef: WindowReference,
+    private router: Router
+  ) {
     this.router.events
       .pipe(
         filter(e => e instanceof NavigationEnd),
@@ -17,8 +18,8 @@ export class GoogleAnalyticsService {
       )
       .subscribe(url => {
         try {
-          ga('set', 'page', url);
-          ga('send', 'pageview');
+          this.winRef.ga('set', 'page', url);
+          this.winRef.ga('send', 'pageview');
         } catch (ex) {
           console.warn(`found exception: urlAfterRedirects=${url}`, ex);
         }
@@ -40,6 +41,6 @@ export class GoogleAnalyticsService {
     eventLabel: string = null,
     eventValue: number = null)
   {
-    ga('send', 'event', { eventCategory, eventLabel, eventAction, eventValue });
+    this.winRef.ga('send', 'event', { eventCategory, eventLabel, eventAction, eventValue });
   }
 }

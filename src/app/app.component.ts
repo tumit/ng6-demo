@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { GlobalReference } from './services/global.reference';
+import { WindowReference } from './services/window.reference';
 
 @Component({
   selector: 'ng6-root',
@@ -11,13 +11,13 @@ export class AppComponent {
 
   title = 'ng6-demo';
 
-  constructor(private global: GlobalReference) {
+  constructor(private winRef: WindowReference) {
     this.appendGaScript();
   }
 
   private appendGaScript() {
     try {
-      const script = this.global.document.createElement('script');
+      const script = this.winRef.document.createElement('script');
       script.innerHTML = `
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -25,7 +25,7 @@ export class AppComponent {
         })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
         ga('create', '${environment.googleAnalyticsTrackingId}', 'auto');
       `;
-      this.global.document.head.appendChild(script);
+      this.winRef.document.head.appendChild(script);
     } catch (ex) {
       console.warn('found exception in appending google analytics script', ex);
     }
