@@ -6,9 +6,10 @@
     "start": "ng serve",
     "build": "ng build",
     "test": "jest",
+    "test:watch": "jest --watch",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "test:watch": "jest --watch"
+    "local": "./node_modules/.bin/ng serve --port 7200"
   },
   "private": true,
   "dependencies": {

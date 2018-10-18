@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
-import { filter, map } from 'rxjs/operators';
+import { filter, map, tap } from 'rxjs/operators';
 
 declare let ga: Function;
 
@@ -9,18 +9,18 @@ declare let ga: Function;
 })
 export class GoogleAnalyticsService {
 
-  constructor(public router: Router) {
+  constructor(private router: Router) {
     this.router.events
       .pipe(
         filter(e => e instanceof NavigationEnd),
-        map(e => e as NavigationEnd)
+        map(e => (e as NavigationEnd).urlAfterRedirects)
       )
-      .subscribe(e => {
+      .subscribe(url => {
         try {
-          ga('set', 'page', e.urlAfterRedirects);
+          ga('set', 'page', url);
           ga('send', 'pageview');
         } catch (ex) {
-          console.log(ex);
+          console.warn(`found exception: urlAfterRedirects=${url}`, ex);
         }
       });
   }
@@ -38,11 +38,8 @@ export class GoogleAnalyticsService {
     eventCategory: string,
     eventAction: string,
     eventLabel: string = null,
-    eventValue: number = null) {
-    const gaEvent = { eventCategory, eventLabel, eventAction, eventValue };
-    console.log('gaEvent', gaEvent);
-    if (typeof ga === 'function') {
-      ga('send', 'event', gaEvent);
-    }
+    eventValue: number = null)
+  {
+    ga('send', 'event', { eventCategory, eventLabel, eventAction, eventValue });
   }
 }
